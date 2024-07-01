@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+        <color name="primary_color">#3F51B5</color> <!-- Primary color for header background -->
+        <color name="accent_color">#4DACF8</color> <!-- Accent color for Edit button -->
+        <color name="delete_color">#F44336</color> <!-- Delete color for Delete button -->
+        <color name="background_color">#FFFFFF</color> <!-- Background color for the entire layout -->
+        <color name="primary_text_color">#212121</color> <!-- Primary text color -->
+        <color name="secondary_text_color">#757575</color> <!-- Secondary text color -->
+        <color name="icon_tint">#FFFFFF</color> <!-- Icon tint color -->
+        <color name="switch_thumb_color">#FF4081</color> <!-- Thumb color for the Switch -->
+        <color name="switch_track_color">#BDBDBD</color>
+    <color name="light_blue">#64B5F6</color>
+    '
+
+    <drawable name="map_background">#E0E0E0</drawable> <!-- Placeholder for map background -->
+
+
+</resources>

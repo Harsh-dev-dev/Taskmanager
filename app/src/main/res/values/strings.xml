@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">TaskManagerApp</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="algorithm_list">
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+    </string-array>
+    <string name="google_map_api_key">
+        AIzaSyDIb0X4LjiKBmQsb5ZNVJxCUvAFD6DNaIw</string>
+</resources>
