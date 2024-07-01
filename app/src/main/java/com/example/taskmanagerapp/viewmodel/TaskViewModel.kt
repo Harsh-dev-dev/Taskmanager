@@ -21,7 +21,19 @@ class TaskViewModel : ViewModel() {
     val editedPriority: LiveData<String> = _editedPriority
     val editedDate: LiveData<String> = _editedDate
 
+    private val _removedTaskCount = MutableLiveData<Int>()
+    val removedTaskCount: LiveData<Int> get() = _removedTaskCount
 
+    private val _presentTaskCount = MutableLiveData<Int>()
+    val presentTaskCount: LiveData<Int> get() = _presentTaskCount
+
+    fun setRemovedTaskCount(count: Int) {
+        _removedTaskCount.value = count
+    }
+
+    fun setPresentTaskCount(count: Int) {
+        _presentTaskCount.value = count
+    }
 
     fun setEditedValues(title: String, description: String, priority: String,  date: String) {
         _editedTitle.value = title

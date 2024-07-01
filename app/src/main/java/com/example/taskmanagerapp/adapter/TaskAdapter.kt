@@ -122,6 +122,8 @@ class TaskAdapter(private val listener: TaskListener, private val recyclerView: 
                     removedTaskCount++
                     presentTaskCount = updatedList.size
 
+                    taskViewModel.setRemovedTaskCount(removedTaskCount)
+                    taskViewModel.setPresentTaskCount(presentTaskCount)
                 }
         }
 
