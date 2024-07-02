@@ -5,8 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
 
-uj6
-
+    <!-- Header Title -->
     <TextView
         android:id="@+id/headerTitle"
         android:layout_width="wrap_content"
@@ -22,6 +21,7 @@ uj6
         android:text="Task Manager"
         android:textSize="25sp" />
 
+    <!-- Search Bar Layout -->
     <LinearLayout
         android:id="@+id/searchLayout"
         android:layout_width="match_parent"
@@ -54,30 +54,66 @@ uj6
             android:layout_gravity="center_vertical" />
     </LinearLayout>
 
+    <!-- Dropdown for Task Date Filter -->
+    <Spinner
+        android:id="@+id/dateFilterSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/searchLayout"
+        android:layout_alignStart="@+id/searchLayout"
+        android:layout_marginStart="4dp"
+        android:dropDownVerticalOffset="30dp"
+        android:visibility="gone"
+        android:entries="@array/date_filter_options"
+        android:spinnerMode="dropdown" />
+
+    <!-- Main FrameLayout for Tasks -->
     <FrameLayout
         android:id="@+id/fragment_container"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_below="@id/dateFilterSpinner"
         android:layout_above="@id/bottom_navigation"
-        android:layout_below="@id/searchLayout"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
+        android:background="#FFFFFF"
         android:visibility="visible">
 
+        <!-- RecyclerView for Tasks -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_below="@id/searchLayout"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            android:clipToPadding="false"
             tools:listitem="@layout/task_item" />
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="bottom"
+            android:background="@android:color/darker_gray" />
+
+        <!-- Completed Tasks Section -->
+        <TextView
+            android:id="@+id/completedTasksLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginTop="16dp"
+            android:text="Completed Tasks"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
 
 
     </FrameLayout>
 
-
+    <!-- FloatingActionButton for Adding Tasks -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -90,9 +126,6 @@ uj6
         android:contentDescription="Add Task"
         app:backgroundTint="#0974A5"
         app:shapeAppearance="@drawable/fabcircular" />
-
-
-
 
     <!-- Bottom Navigation Bar -->
     <com.google.android.material.bottomnavigation.BottomNavigationView

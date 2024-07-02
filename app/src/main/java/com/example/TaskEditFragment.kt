@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -49,6 +50,7 @@ class TaskEditFragment : DialogFragment() {
         observeViewModel()
 
         buttonSave.setOnClickListener {
+            Toast.makeText(requireContext(), "Edited task Saved", Toast.LENGTH_SHORT).show()
             saveTaskDetails()
             dismiss()
         }

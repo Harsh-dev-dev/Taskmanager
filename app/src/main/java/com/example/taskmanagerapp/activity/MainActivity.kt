@@ -3,6 +3,7 @@ package com.example.taskmanagerapp.activity
 import TaskAdapter
 import android.animation.ObjectAnimator
 import android.app.KeyguardManager
+import android.app.TimePickerDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -11,11 +12,15 @@ import android.hardware.biometrics.BiometricPrompt
 import android.os.Build
 import android.os.Bundle
 import android.os.CancellationSignal
+import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -25,27 +30,43 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.taskmanagerapp.fragments.AddTaskDialogFragment
+import com.example.taskmanagerapp.AddTaskDialogFragment
 import com.example.taskmanagerapp.fragments.Dashboard_Fragment
 import com.example.taskmanagerapp.fragments.HomeFragment
 import com.example.taskmanagerapp.R
 import com.example.taskmanagerapp.fragments.SettingsFragment
 import com.example.taskmanagerapp.Task
 import com.example.taskmanagerapp.viewmodel.TaskViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.auth
+import java.util.Calendar
+import com.google.android.gms.tasks.Task as GoogleTask
 
 
 class MainActivity : AppCompatActivity(), TaskAdapter.TaskListener {
     private lateinit var fabBackground: View
     private var cancellationSignal: CancellationSignal? = null
+    private lateinit var auth: FirebaseAuth
+    private lateinit var googleSignInClient: GoogleSignInClient
 
     private val taskViewModel: TaskViewModel by viewModels()
     private lateinit var taskAdapter: TaskAdapter
     private lateinit var searchIcon: ImageView
     private var fragmentContainer: FrameLayout? = null
     lateinit var view:RecyclerView
+    private lateinit var Spin: Spinner
+    private lateinit var userOptionsSpinner: Spinner
+
 
     private val authenticationCallback: BiometricPrompt.AuthenticationCallback
         get() = @RequiresApi(Build.VERSION_CODES.P)
@@ -98,9 +119,26 @@ class MainActivity : AppCompatActivity(), TaskAdapter.TaskListener {
         supportActionBar?.hide()
         val fab: FloatingActionButton = findViewById(R.id.fab)
         checkBiometricSupport()
+        Spin = findViewById(R.id.dateFilterSpinner)
+
+        auth = FirebaseAuth.getInstance()
+
+        // Configure Google Sign In
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+
+        // Set up sign in button click listener
+        findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {
+
+        }
+
 
         val biometricPrompt = BiometricPrompt.Builder(this)
-            .setTitle("Fingerprint Reqruired")
+            .setTitle("Fingerprint Required")
             .setSubtitle("Please put your Fingerprint on sensor to Unclock!!!")
             .setDescription("Uses Fingerprint")
             .setNegativeButton("Cancel", this.mainExecutor, DialogInterface.OnClickListener { dialog, which ->
@@ -126,7 +164,6 @@ class MainActivity : AppCompatActivity(), TaskAdapter.TaskListener {
 
 
 
-
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
 
         taskAdapter = TaskAdapter(this,view, taskViewModel)
@@ -149,11 +186,10 @@ class MainActivity : AppCompatActivity(), TaskAdapter.TaskListener {
 
 
 
-    findViewById<RecyclerView>(R.id.recyclerView).apply {
+        findViewById<RecyclerView>(R.id.recyclerView).apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = taskAdapter
 
-            // Enable swipe to edit/delete
             taskAdapter.enableSwipeToDelete(this)
 
         }
@@ -169,23 +205,13 @@ class MainActivity : AppCompatActivity(), TaskAdapter.TaskListener {
             AddTaskDialogFragment(taskViewModel, object : AddTaskDialogFragment.TaskAddedListener {
                 override fun onTaskAdded(task: Task) {
                     taskViewModel.addTask(task)
+                    Spin.visibility = View.VISIBLE
                 }
             }).show(supportFragmentManager, "AddTaskDialogFragment")
             it.clearAnimation()
             animator.cancel()
 
         }
-
-
-
-
-
-
-
-
-
-
-
 
         findViewById<BottomNavigationView>(R.id.bottom_navigation).setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -204,11 +230,10 @@ class MainActivity : AppCompatActivity(), TaskAdapter.TaskListener {
                         .replace(R.id.fragment_container, Dashboard_Fragment())
                         .commit()
                     true
-            }
+                }
                 R.id.nav_settings -> {
                     view.visibility = View.GONE
-
-
+                    signIn()
                     supportFragmentManager.beginTransaction().replace(
                         R.id.fragment_container,
                         SettingsFragment()
@@ -225,6 +250,66 @@ class MainActivity : AppCompatActivity(), TaskAdapter.TaskListener {
     }
 
 
+    private fun signIn() {
+        Log.d(TAG, "Sign in button clicked")
+        val signInIntent = googleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        Log.d(TAG, "onActivityResult: requestCode=$requestCode, resultCode=$resultCode")
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...)
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            handleSignInResult(task)
+        }
+    }
+
+    private fun handleSignInResult(completedTask: GoogleTask<GoogleSignInAccount>) {
+        try {
+            val account = completedTask.getResult(ApiException::class.java)!!
+            Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
+            firebaseAuthWithGoogle(account.idToken!!)
+        } catch (e: ApiException) {
+            Log.w(TAG, "Google sign in failed", e)
+            Toast.makeText(this, "Google sign in failed: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+        }
+    }
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    Log.d(TAG, "signInWithCredential:success")
+                    val user = auth.currentUser
+                    Toast.makeText(this, "Welcome ${user?.displayName}", Toast.LENGTH_SHORT).show()
+                } else {
+                    Log.w(TAG, "signInWithCredential:failure", task.exception)
+                    Toast.makeText(this, "Authentication Failed.", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+    private fun signOut() {
+        auth.signOut()
+        googleSignInClient.signOut().addOnCompleteListener(this) {
+        }
+    }
+    fun onReminderBellClicked(view: View) {
+
+        val timePickerDialog = TimePickerDialog(this, { _, hourOfDay, minute ->
+
+            setReminder(hourOfDay, minute)
+
+            (view as ImageView).setImageResource(R.drawable.ic_bell_enabled)
+        }, Calendar.getInstance().get(Calendar.HOUR_OF_DAY), Calendar.getInstance().get(Calendar.MINUTE), true)
+        timePickerDialog.show()
+    }
+
+    fun setReminder(hourOfDay: Int, minute: Int) {
+
+    }
     private fun applySavedTheme() {
         val sharedPreferences = getSharedPreferences(SettingsFragment.THEME_PREF, MODE_PRIVATE)
         val theme = sharedPreferences.getString(
@@ -298,6 +383,10 @@ class MainActivity : AppCompatActivity(), TaskAdapter.TaskListener {
         intent.putExtra("priority", task.priority)
         intent.putExtra("isCompleted", task.isCompleted)
         startActivity(intent)
+    }
+    companion object {
+        private const val RC_SIGN_IN = 9001
+        private const val TAG = "GoogleSignIn"
     }
 }
 

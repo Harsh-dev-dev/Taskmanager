@@ -16,6 +16,7 @@ import androidx.lifecycle.Observer
 import com.example.TaskEditFragment
 import com.example.taskmanagerapp.R
 import com.example.taskmanagerapp.Task
+import com.example.taskmanagerapp.activity.MainActivity
 import com.example.taskmanagerapp.viewmodel.TaskViewModel
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -155,7 +156,7 @@ class TaskDetailActivity : AppCompatActivity(),OnMapReadyCallback {
                 description = editedDescription,
                 dueDate = dueDate.text.toString(),  // Use the existing due date
                 priority = editedPriority,
-                isCompleted = completionSwitch.isChecked  // Use the existing completion status
+                isCompleted = completionSwitch.isChecked // Use the existing completion status
             )
             taskViewModel.updateTask(task)
 
@@ -171,6 +172,7 @@ class TaskDetailActivity : AppCompatActivity(),OnMapReadyCallback {
             else -> priorityLevel.setTextColor(Color.BLACK)
         }
     }
+
     override fun onMapReady(googleMap: GoogleMap) {
         mgoogleMap = googleMap
 
@@ -188,13 +190,12 @@ class TaskDetailActivity : AppCompatActivity(),OnMapReadyCallback {
                 permissionCode
             )
         } else {
-            googleMap.isMyLocationEnabled = true
+               googleMap.isMyLocationEnabled = true
             googleMap.setOnMyLocationChangeListener { location ->
                 currentLocation = LatLng(location.latitude, location.longitude)
             }
         }
     }
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == permissionCode) {

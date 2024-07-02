@@ -16,6 +16,18 @@ class TaskViewModel : ViewModel() {
     val completedTasks: LiveData<MutableList<Task>>
         get() = _completedTasks
 
+    private val _completedTaskCount = MutableLiveData<Int>()
+    val completedTaskCount: LiveData<Int> get() = _completedTaskCount
+
+    init {
+        _completedTaskCount.value = 0
+    }
+
+    fun completeTasks(task: Task) {
+        // Update task completion logic
+        _completedTaskCount.value = _completedTaskCount.value?.plus(1)
+    }
+
     val editedTitle: LiveData<String> = _editedTitle
     val editedDescription: LiveData<String> = _editedDescription
     val editedPriority: LiveData<String> = _editedPriority

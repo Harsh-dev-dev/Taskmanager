@@ -58,6 +58,18 @@
             android:text="Due Date" />
 
         <!-- Checkbox for Task Completion -->
+
+        <ImageView
+            android:id="@+id/reminderBell"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/taskDescription"
+            android:layout_marginStart="11dp"
+            android:layout_toEndOf="@+id/taskDueDate"
+            android:contentDescription="Set Reminder"
+            android:onClick="onReminderBellClicked"
+            android:src="@drawable/ic_bell_disabled" />
+
         <CheckBox
             android:id="@+id/taskCheckbox"
             android:layout_width="wrap_content"

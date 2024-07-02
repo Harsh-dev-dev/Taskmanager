@@ -1,79 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_height="wrap_content">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilTaskTitle"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Task Title">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/taskTitleInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilTaskDescription"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Task Description">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/taskDescriptionInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <!-- Task Priority and Due Date -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <!-- Task Priority Dropdown -->
-        <Spinner
-            android:id="@+id/spinnerPriority"
-            android:layout_width="150dp"
-            android:layout_height="52dp"
-            android:layout_marginEnd="8dp"
-            android:padding="12dp"
-            android:hint="Priority"
-            android:spinnerMode="dropdown"
-            android:dropDownVerticalOffset="40dp"
-            android:entries="@array/algorithm_list"
-            android:background="@drawable/edit_text_background"
-            android:textAlignment="textStart" />
-
-        <!-- Due Date Input -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilDueDate"
+            android:id="@+id/tilTaskTitle"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Due Date">
+            android:hint="Task Title">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/taskDueDate"
+                android:id="@+id/taskTitleInput"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Due Date"
-                android:focusable="true"
-                android:clickable="true"
-                android:inputType="none"
-                android:focusableInTouchMode="false" />
+                android:layout_height="wrap_content" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilTaskDescription"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Task Description">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/taskDescriptionInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Task Priority and Due Date -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Task Priority Dropdown -->
+            <Spinner
+                android:id="@+id/spinnerPriority"
+                android:layout_width="150dp"
+                android:layout_height="52dp"
+                android:layout_marginEnd="8dp"
+                android:padding="12dp"
+                android:hint="Priority"
+                android:spinnerMode="dropdown"
+                android:dropDownVerticalOffset="40dp"
+                android:entries="@array/algorithm_list"
+                android:background="@drawable/edit_text_background"
+                android:textAlignment="textStart" />
+
+            <!-- Due Date Input -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilDueDate"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Due Date">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/taskDueDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Due Date"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:inputType="none"
+                    android:focusableInTouchMode="false" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

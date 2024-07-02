@@ -7,6 +7,6 @@
         <item>Medium</item>
         <item>High</item>
     </string-array>
-    <string name="google_map_api_key">
-        AIzaSyDIb0X4LjiKBmQsb5ZNVJxCUvAFD6DNaIw</string>
+    <string name="google_map_api_key">AIzaSyAor2Ke1suqDTnCzcOiKQT-VbcLxg5JniQ</string>
+    <string name="default_web_client_id">1097398345062-fndnm7e8nac3gt1rhjk7oooqn6lng6n4.apps.googleusercontent.com</string>
 </resources>
